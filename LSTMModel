@@ -1,0 +1,35 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Created on Fri Jun  5 16:24:39 2020
+
+@author: furukawashouya
+"""
+
+
+from torch import nn
+
+
+class LSTMD(nn.Module):
+    def __init__(self, lstm_input_dim, lstm_hidden_dim, target_dim):
+        super(LSTMD, self).__init__()
+        
+        self.lstm = nn.LSTM(input_size = lstm_input_dim, 
+                           hidden_size = lstm_hidden_dim,
+                           batch_first = True)
+        
+        self.dense1 = nn.Linear(lstm_hidden_dim, 64)
+        self.dense3 = nn.Linear(64, 3)
+        
+    def forward(self, X_input, hidden0 = None):
+        
+        lstm_out, (hidden, cell) = self.lstm(X_input, hidden0)
+        
+        linear_out1 = self.dense1(lstm_out[:, -1, :])
+        linear_out3 = self.dense3(linear_out1)
+
+        class_classifier = linear_out3
+        
+        return class_classifier
+ 
+    
