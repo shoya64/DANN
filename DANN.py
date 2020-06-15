@@ -84,11 +84,14 @@ class DANN_Bi(nn.Module):
         
         #特徴抽出層
         lstm_out, _ = self.lstm(X_input)
+        print(lstm_out.shape)
         
         out = self.dropout(lstm_out[:, -1, :])
         
+        
         #クラス分類層
         class_classifier = self.dense(out)
+        print(class_classifier.shape)
         
         #GRL
         reverse_feature = ReverseLayerF.apply(out, alpha)
